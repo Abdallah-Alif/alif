@@ -2,224 +2,565 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abdullah Alif | THINKER</title>
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Abdullah Alif | Theoretical Physics Portfolio</title>
+    <meta name="description" content="Academic Portfolio of Abdullah Alif. Researching Variable Mass Systems & Non-Inertial Dynamics.">
+    <meta name="theme-color" content="#030303">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg: #050505;
-            --accent: #38bdf8;
-            --text-dim: #94a3b8;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
+            /* Palette: Cyber-Academic Dark */
+            --bg-void: #030303;
+            --bg-panel: rgba(20, 20, 20, 0.45);
+            --bg-panel-hover: rgba(30, 30, 30, 0.65);
+            
+            --accent-primary: #38bdf8; /* Sky Blue */
+            --accent-glow: rgba(56, 189, 248, 0.15);
+            
+            --text-display: #ffffff;
+            --text-body: #94a3b8;
+            --text-dim: #475569;
+            
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(56, 189, 248, 0.4);
+            
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        body { 
-            background: var(--bg); color: #fff; 
-            font-family: 'Inter', -apple-system, system-ui, sans-serif; 
-            overflow-x: hidden; line-height: 1.4;
-        }
-
-        #canvas-env { position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none; }
-
-        /* HEADER: Elite Minimalist */
-        nav {
-            padding: 1rem 8%; display: flex; justify-content: space-between; align-items: center;
-            backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
-            position: sticky; top: 0; z-index: 100;
-        }
-        .logo { font-weight: 800; font-family: monospace; font-size: 0.9rem; letter-spacing: 1px; }
-        .logo span { color: var(--accent); }
+        /* --- RESET & BASE --- */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         
-        .nav-links { display: flex; gap: 1.5rem; }
-        .nav-links a { 
-            text-decoration: none; color: var(--text-dim); font-size: 0.75rem; 
-            font-weight: 600; text-transform: uppercase; transition: 0.2s;
-        }
-        .nav-links a:hover { color: var(--accent); }
-
-        /* HERO: Impactful Typography */
-        .hero { min-height: 85vh; display: flex; flex-direction: column; justify-content: center; padding: 0 8%; }
-        .badge { 
-            display: inline-block; padding: 4px 12px; border: 1px solid var(--accent);
-            color: var(--accent); font-family: monospace; font-size: 0.65rem; 
-            margin-bottom: 2rem; width: fit-content;
-        }
-        h1 { font-size: clamp(3rem, 12vw, 8rem); font-weight: 900; letter-spacing: -0.05em; line-height: 0.8; margin-bottom: 2rem; }
-        .sub { font-size: clamp(1rem, 2vw, 1.5rem); color: var(--text-dim); max-width: 600px; font-weight: 400; }
-
-        /* CONTENT GRID */
-        .section-label { padding: 4rem 8% 1.5rem; font-size: 0.6rem; letter-spacing: 0.4em; color: var(--accent); text-transform: uppercase; }
+        html { scroll-behavior: smooth; }
         
-        .bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 0 8% 4rem; }
-        .card { 
-            background: var(--glass); border: 1px solid var(--border); 
-            padding: 2.5rem; border-radius: 4px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .card:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
-        .wide { grid-column: span 2; }
-        .card h3 { font-size: 1.1rem; margin-bottom: 1rem; color: #fff; }
-        .card p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.6; }
-
-        /* MATH PANEL */
-        .math-hero { 
-            margin: 0 8% 4rem; background: #000; border: 1px solid var(--accent);
-            padding: 6rem 1rem; text-align: center; position: relative; overflow: hidden;
-        }
-        #math-target { font-size: clamp(1.4rem, 4vw, 2.8rem); color: var(--accent); }
-
-        /* CREDENTIALS */
-        .cred-bar { margin: 0 8% 6rem; display: flex; flex-wrap: wrap; gap: 0.8rem; }
-        .cred-item { 
-            flex: 1; min-width: 250px; padding: 1.5rem; border: 1px solid var(--border);
-            text-decoration: none; display: flex; justify-content: space-between; align-items: center;
-            background: var(--glass); transition: 0.2s;
-        }
-        .cred-item:hover { border-color: var(--accent); }
-        .cred-item span { font-size: 0.8rem; color: #fff; font-weight: 500; }
-        .cred-item i { color: var(--accent); font-size: 0.7rem; font-family: monospace; }
-
-        /* MOBILE OPTIMIZATION */
-        @media (max-width: 800px) {
-            nav { padding: 1.2rem 5%; }
-            .hero { padding: 0 5%; text-align: center; align-items: center; }
-            .bento { grid-template-columns: 1fr; padding: 0 5% 2rem; }
-            .wide { grid-column: span 1; }
-            .math-hero, .cred-bar, .section-label { margin-left: 5%; margin-right: 5%; }
-            .nav-links { gap: 0.8rem; }
-            .nav-links a { font-size: 0.65rem; }
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-display);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        footer { 
-            padding: 4rem 8%; border-top: 1px solid var(--border); 
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-void); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+
+        /* --- BACKGROUND SIMULATION --- */
+        #canvas-simulation {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; opacity: 0.5; pointer-events: none;
+        }
+
+        /* --- LAYOUT UTILITIES --- */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 6vw;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 1s var(--ease-out-expo) forwards;
+            opacity: 0; transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- NAVIGATION --- */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            padding: 1.5rem 6vw;
             display: flex; justify-content: space-between; align-items: center;
-            color: var(--text-dim); font-size: 0.7rem;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            background: rgba(3, 3, 3, 0.7);
+        }
+
+        .nav-brand {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: -0.05em;
+            color: var(--text-display);
+        }
+        .nav-brand span { color: var(--accent-primary); }
+
+        .nav-links { display: flex; gap: 2rem; }
+        
+        .nav-item {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-body);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.3s ease;
+        }
+        .nav-item:hover { color: var(--accent-primary); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 92vh;
+            display: flex; flex-direction: column; justify-content: center;
+            padding-top: 80px; /* Offset for navbar */
+        }
+
+        .badge-wrapper {
+            margin-bottom: 2rem;
+            animation-delay: 0.1s;
+        }
+
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(56, 189, 248, 0.06);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-primary);
+        }
+        .status-dot { width: 6px; height: 6px; background: var(--accent-primary); border-radius: 50%; box-shadow: 0 0 8px var(--accent-primary); }
+
+        .hero-title {
+            font-size: clamp(3rem, 11vw, 7rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 0.95;
+            margin-bottom: 2rem;
+            background: linear-gradient(170deg, #ffffff 10%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation-delay: 0.2s;
+        }
+
+        .hero-bio {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-body);
+            max-width: 720px;
+            font-weight: 300;
+            line-height: 1.7;
+            animation-delay: 0.3s;
+        }
+        .hero-bio strong { color: var(--text-display); font-weight: 500; }
+
+        /* --- SECTION HEADERS --- */
+        .section-separator {
+            padding: 6rem 0 2rem 0;
+            display: flex; align-items: center; gap: 1.5rem;
+            animation-delay: 0.4s;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            white-space: nowrap;
+        }
+
+        .section-line {
+            height: 1px;
+            background: var(--border-subtle);
+            width: 100%;
+        }
+
+        /* --- BENTO GRID SYSTEM --- */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(280px, auto);
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Card Component */
+        .card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s var(--ease-out-expo);
+            backdrop-filter: blur(4px);
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+
+        .card:hover {
+            border-color: var(--border-active);
+            transform: translateY(-4px);
+            background: var(--bg-panel-hover);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6);
+        }
+
+        /* Card Typography */
+        .card-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            display: block;
+            opacity: 0.8;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-display);
+            letter-spacing: -0.02em;
+        }
+
+        .card-text {
+            font-size: 0.95rem;
+            color: var(--text-body);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Grid Spans */
+        .span-8 { grid-column: span 8; }
+        .span-4 { grid-column: span 4; }
+        .span-6 { grid-column: span 6; }
+        .span-12 { grid-column: span 12; }
+
+        /* Special Card: The Math Visualizer */
+        .math-card {
+            background: radial-gradient(circle at top right, #111, #050505);
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .math-display { font-size: 1.8rem; color: var(--text-display); margin: 1rem 0; }
+        .math-caption { font-family: 'JetBrains Mono'; font-size: 0.7rem; color: var(--text-dim); margin-top: 1rem; }
+
+        /* --- CREDENTIALS LIST (THE VAULT) --- */
+        .vault-list {
+            display: flex; flex-direction: column;
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 8rem;
+        }
+
+        .vault-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.8rem 2.5rem;
+            background: rgba(10, 10, 10, 0.4);
+            border-bottom: 1px solid var(--border-subtle);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .vault-item:last-child { border-bottom: none; }
+
+        .vault-item:hover {
+            background: rgba(56, 189, 248, 0.05);
+            padding-left: 3rem; /* Slide effect */
+        }
+
+        .vault-name {
+            font-size: 1rem; color: var(--text-display); font-weight: 500;
+        }
+        
+        .vault-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; color: var(--accent-primary);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            border-top: 1px solid var(--border-subtle);
+            padding: 4rem 0;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .footer-tech { font-family: 'JetBrains Mono', monospace; opacity: 0.5; }
+
+        /* --- RESPONSIVE BREAKPOINTS --- */
+        @media (max-width: 1024px) {
+            .span-8, .span-4 { grid-column: span 12; }
+            .hero-title { font-size: 5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 1rem 5vw; }
+            .nav-links { display: none; /* Hide nav links on mobile for cleanliness */ }
+            .container { padding: 0 5vw; }
+            
+            .hero { min-height: 85vh; padding-top: 60px; }
+            .hero-title { font-size: 3.5rem; margin-bottom: 1.5rem; }
+            
+            .bento-grid { display: flex; flex-direction: column; gap: 1rem; }
+            .card { padding: 2rem 1.5rem; min-height: auto; }
+            
+            .vault-item { padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .vault-item:hover { padding-left: 1.5rem; background: rgba(56, 189, 248, 0.05); }
+            
+            .footer { flex-direction: column; gap: 1rem; text-align: center; }
+            .math-display { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas-env"></canvas>
 
-    <nav>
-        <div class="logo">A.ALIF<span> // 2027</span></div>
+    <canvas id="canvas-simulation"></canvas>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            About<span>_A.ALIF</span>
+        </div>
         <div class="nav-links">
-            <a href="mailto:alif.physics@outlook.com">Email</a>
-            <a href="https://linkedin.com/in/abdullah-alif" target="_blank">LinkedIn</a>
+            <a href="mailto:alif.physics@outlook.com" class="nav-item">Contact</a>
+            <a href="https://linkedin.com/in/abdullah-alif" target="_blank" class="nav-item">LinkedIn</a>
         </div>
     </nav>
 
-    <main>
+    <main class="container">
+        
         <section class="hero">
-            <div class="badge">NATIONAL PHYSICS OLYMPIAD WINNER</div>
-            <h1>ABDULLAH ALIF</h1>
-            <p class="sub">Dhaka College '26 | Researcher focusing on the mathematical formalisms of classical and orbital mechanics.</p>
+            <div class="badge-wrapper fade-in-up">
+                <div class="status-badge">
+                    <div class="status-dot"></div>
+                    PHYSICS OLYMPIAD NATIONAL WINNER
+                </div>
+            </div>
+            
+            <h1 class="hero-title fade-in-up">ABDULLAH ALIF</h1>
+            
+            <p class="hero-bio fade-in-up">
+                <strong>Dhaka College '26.</strong> A theoretical physics researcher investigating the limitations of ideal kinematic models. My work currently focuses on variable-mass systems, aerodynamic drag regimes, and trajectory analysis in non-inertial frames.
+            </p>
         </section>
 
-        <h2 class="section-label">Academic Provenance</h2>
-        <section class="bento">
-            <div class="card wide">
-                <h3>Theoretical Mentorship</h3>
-                <p>Collaborating with PhD faculty at Dhaka College to investigate Lagrangian derivations. Letter of Recommendation confirms advanced proficiency in non-inertial reference frames and calculus-based physics.</p>
-            </div>
-            <div class="card">
-                <h3>Dhaka College</h3>
-                <p>Enrolled in Bangladesh's premier STEM institution. Maintaining an elite trajectory for international admissions.</p>
-            </div>
-            <div class="card">
-                <h3>Olympiad Path</h3>
-                <p>3-year progression from Regional Top Scorer to National Participation, culminating in a National Winner award.</p>
-            </div>
-            <div class="card wide">
-                <h3>Computational Mechanics</h3>
-                <p>Simulating gravitational n-body interactions using Python and C++. Applying numerical methods to solve differential equations in orbital decay scenarios.</p>
-            </div>
+        <div class="section-separator fade-in-up">
+            <span class="section-label">Research & Academics</span>
+            <div class="section-line"></div>
+        </div>
+
+        <section class="bento-grid fade-in-up">
+            
+            <article class="card span-8">
+                <span class="card-tag">01 // CURRENT INVESTIGATION</span>
+                <h3 class="card-title">Classical Rocket Dynamics</h3>
+                <div class="card-text">
+                    I am deriving the generalized Tsiolkovsky equation for non-inertial reference frames. 
+                    Unlike standard textbook approximations, my model focuses on incorporating atmospheric density variations $\rho(h)$ and drag coefficients $C_D$ as dynamic variables rather than constants. 
+                    This allows for higher precision in predicting apogee for sub-orbital trajectories.
+                </div>
+            </article>
+
+            <article class="card span-4">
+                <span class="card-tag">02 // ACADEMIC BASE</span>
+                <h3 class="card-title">Dhaka College</h3>
+                <p class="card-text">
+                    Class 12, Science .<br>
+                    Maintaining elite academic standing while pursuing independent research. Preparing for international undergraduate admission in Physics.
+                </p>
+            </article>
+
+            <article class="card span-6 math-card">
+                <div id="math-display-target" class="math-display"></div>
+                <div class="math-caption">FIG 1.0: MOMENTUM BALANCE WITH EXTERNAL FORCES</div>
+            </article>
+
+            <article class="card span-6">
+                <span class="card-tag">03 // FACULTY COLLABORATION</span>
+                <h3 class="card-title">Theoretical Mentorship</h3>
+                <p class="card-text">
+                    Collaborating with PhD faculty members to bridge the gap between HSC curriculum and Lagrangian mechanics.
+                    Current work involves error analysis in projectile motion simulations and perturbative methods.
+                </p>
+            </article>
+
         </section>
 
-        <h2 class="section-label">Mathematical Formalism</h2>
-        <section class="math-hero">
-            <div id="math-target"></div>
+        <div class="section-separator fade-in-up">
+            <span class="section-label">Verified Archive</span>
+            <div class="section-line"></div>
+        </div>
+
+        <section class="vault-list fade-in-up">
+            <a href="docs/BDPhO_Consolidated.pdf" class="vault-item" target="_blank">
+                <span class="vault-name">Physics Olympiad National Winner Award</span>
+                <span class="vault-meta">VERIFIED_PDF ↗</span>
+            </a>
+            <a href="docs/PhD_Recommendation.pdf" class="vault-item" target="_blank">
+                <span class="vault-name">Faculty Recommendation Letter</span>
+                <span class="vault-meta">PhD_SIGNED ↗</span>
+            </a>
+            <a href="docs/Transcript_SSC.pdf" class="vault-item" target="_blank">
+                <span class="vault-name">Official Academic Transcript</span>
+                <span class="vault-meta">DHAKA_COLLEGE ↗</span>
+            </a>
         </section>
 
-        <h2 class="section-header section-label">Verified Archive</h2>
-        <section class="cred-bar">
-            <a href="docs/BDPhO_Consolidated.pdf" class="cred-item" target="_blank">
-                <span>Physics Olympiad Record</span>
-                <i>[VIEW_ARCHIVE]</i>
-            </a>
-            <a href="docs/PhD_Recommendation.pdf" class="cred-item" target="_blank">
-                <span>Faculty Recommendation</span>
-                <i>[VERIFIED_PDF]</i>
-            </a>
-            <a href="docs/Transcript_SSC.pdf" class="cred-item" target="_blank">
-                <span>SSC Transcript</span>
-                <i>[OFFICIAL_SCAN]</i>
-            </a>
-        </section>
+        <footer class="footer fade-in-up">
+            <div>&copy; 2026 ABDULLAH ALIF.</div>
+            <div class="footer-tech">SYSTEM: Made With ❤️by A.ALIF  // KINETIC_THEME</div>
+        </footer>
+
     </main>
 
-    <footer>
-        <div>© 2026 Abdullah Alif</div>
-        <div>MECHANICS • ELECTROSTATICS • ELECTRODYNAMICS • OPTICS</div>
-    </footer>
-
     <script>
-        // High-Resolution Math Rendering
-        window.onload = function() {
-            katex.render("\\mathcal{S} = \\int_{t_1}^{t_2} L(q, \\dot{q}, t) \\, dt", document.getElementById("math-target"), {
+        // --- 1. MATHEMATICS ENGINE CONFIGURATION ---
+        document.addEventListener("DOMContentLoaded", function() {
+            // A. Render the Main Equation (Big Display)
+            katex.render(
+                "m \\frac{dv}{dt} = -u \\frac{dm}{dt} - mg - \\frac{1}{2}\\rho(h) v^2 C_D A", 
+                document.getElementById("math-display-target"), 
+                { throwOnError: false, displayMode: true }
+            );
+
+            // B. Render Inline Math in Paragraphs (The Auto-Renderer)
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true}, // Block math
+                    {left: "$", right: "$", display: false}   // Inline math
+                ],
                 throwOnError: false
             });
-        };
+        });
 
-        // Professional Physics Background Particle System
-        const canvas = document.getElementById('canvas-env');
+        // --- 2. INTERACTIVE CONSTELLATION ENGINE ---
+        const canvas = document.getElementById('canvas-simulation');
         const ctx = canvas.getContext('2d');
-        let pts = [];
+        
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null };
 
-        function init() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            pts = [];
-            let count = window.innerWidth < 800 ? 30 : 70;
-            for(let i=0; i<count; i++) {
-                pts.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 0.4,
-                    vy: (Math.random() - 0.5) * 0.4
-                });
+        // Configuration
+        const PARTICLE_COUNT = window.innerWidth < 768 ? 35 : 80;
+        const CONNECT_DIST = 160;
+        const MOUSE_DIST = 200;
+
+        // Resize Handler
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        // Mouse Interaction
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+        
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.3; // Gentle drift
+                this.vy = (Math.random() - 0.5) * 0.3;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.baseX = this.x;
+                this.baseY = this.y;
+            }
+
+            update() {
+                // 1. Basic Movement
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // 2. Mouse Repulsion/Attraction (Gravity Effect)
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (distance < MOUSE_DIST) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (MOUSE_DIST - distance) / MOUSE_DIST;
+                        const direction = -1; // -1 = Repel, 1 = Attract
+                        
+                        // Soft push
+                        this.vx += forceDirectionX * force * 0.05 * direction;
+                        this.vy += forceDirectionY * force * 0.05 * direction;
+                    }
+                }
+
+                // 3. Wall Bounce
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
 
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'rgba(56, 189, 248, 0.3)';
-            ctx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
-            pts.forEach((p, i) => {
-                p.x += p.vx; p.y += p.vy;
-                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 1.2, 0, Math.PI*2);
-                ctx.fill();
-                for(let j=i+1; j<pts.length; j++) {
-                    let d = Math.sqrt((p.x-pts[j].x)**2 + (p.y-pts[j].y)**2);
-                    if(d < 200) {
+        function init() {
+            resize();
+            particles = [];
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach((p, index) => {
+                p.update();
+                p.draw();
+
+                // Draw Constellation Lines
+                for (let j = index + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < CONNECT_DIST) {
                         ctx.beginPath();
+                        // Dynamic opacity based on distance
+                        const opacity = 1 - (dist / CONNECT_DIST);
+                        ctx.strokeStyle = `rgba(56, 189, 248, ${opacity * 0.15})`; // Cyan subtle lines
+                        ctx.lineWidth = 0.5;
                         ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(pts[j].x, pts[j].y);
+                        ctx.lineTo(p2.x, p2.y);
                         ctx.stroke();
                     }
                 }
             });
-            requestAnimationFrame(draw);
+            requestAnimationFrame(animate);
         }
-        init(); draw();
-        window.onresize = init;
+
+        window.addEventListener('resize', () => {
+            resize();
+            init();
+        });
+
+        // Initialize
+        init();
+        animate();
     </script>
 </body>
-
 </html>
